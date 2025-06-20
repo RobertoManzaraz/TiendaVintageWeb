@@ -1,0 +1,738 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f4f4f4; /* Un gris claro para el fondo */
+}
+
+/* Header y Navbar */
+header {
+    background-color: #333; /* Color oscuro para la barra de navegación */
+    color: white;
+    padding: 1rem 0; /* Espaciado arriba y abajo */
+}
+
+.navbar {
+    display: flex; /* Para organizar elementos en fila */
+    justify-content: space-between; /* Espacia los elementos horizontalmente */
+    align-items: center; /* Centra verticalmente los elementos */
+    max-width: 1200px; /* Ancho máximo para el contenido */
+    margin: 0 auto; /* Centra la barra de navegación en la página */
+    padding: 0 20px; /* Espaciado a los lados */
+}
+
+.logo a {
+    color: white;
+    text-decoration: none; /* Quita el subrayado de los enlaces */
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.nav-links {
+    list-style: none; /* Quita los puntos de la lista */
+    display: flex; /* Para que los enlaces de navegación estén en fila */
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li {
+    margin-right: 20px; /* Espacio entre los elementos de la lista */
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s ease; /* Animación suave al pasar el ratón */
+}
+
+.nav-links a:hover {
+    color: #007bff; /* Cambia de color al pasar el ratón */
+}
+
+.nav-icons a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px; /* Espacio entre iconos */
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.nav-icons a:hover {
+    color: #007bff;
+}
+
+/* Hero Slider (Carrusel de imágenes) */
+.hero-slider {
+    position: relative; /* Para posicionar los botones de navegación */
+    width: 100%; /* Ocupa todo el ancho disponible */
+    max-width: 700px; /* PERO con un máximo de 700px */
+    margin: 40px auto; /* Centra el slider y le da espacio */
+    overflow: hidden; /* ¡IMPORTANTE! Oculta las partes de las imágenes que se salgan del contenedor */
+    height: 350px; /* Altura fija para el slider */
+}
+
+.slider-container {
+    display: flex; /* ¡CRÍTICO! Hace que las imágenes se coloquen una al lado de la otra */
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease-in-out; /* Animación de deslizamiento suave */
+}
+
+.slider-image {
+    width: 100%;
+    height: 350px;
+    object-fit: cover; /* Recorta la imagen para cubrir el espacio sin distorsionarla */
+    flex-shrink: 0; /* ¡IMPORTANTE! Evita que las imágenes se encojan */
+    display: block;
+}
+
+/* Botones de navegación del slider */
+.prev-btn, .next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 15px;
+    cursor: pointer;
+    font-size: 2rem;
+    z-index: 10;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.prev-btn:hover, .next-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.prev-btn {
+    left: 10px;
+}
+
+.next-btn {
+    right: 10px;
+}
+
+
+/* Sección de Productos Destacados */
+.featured-products {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.featured-products h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.product-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    /* Estilos para centrado de product-card, movidos de inline HTML */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.product-card img {
+    max-width: 100%;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    height: 250px;
+    object-fit: cover;
+    /* Estilos para imagen en product-card, movidos de inline HTML */
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.product-card h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.product-card p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.product-card button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.product-card button:hover {
+    background-color: #0056b3;
+}
+
+/* Footer (Pie de página) */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+.social-links a {
+    color: white;
+    margin: 0 10px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: #007bff;
+}
+
+/* Modal (Login/Register) - Centralizado en styles.css */
+#login-modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+}
+
+
+.modal-content {
+    background-color: #fefefe;
+    padding: 30px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-content h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.modal-content form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+.modal-content form input[type="text"],
+.modal-content form input[type="password"],
+.modal-content form input[type="email"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.modal-content form button {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+}
+
+.modal-content form button:hover {
+    background-color: #218838;
+}
+
+.modal-content form p {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+}
+
+.modal-content form p a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.modal-content form p a:hover {
+    text-decoration: underline;
+}
+
+/* Modales de Notificación Personalizados - Centralizado en styles.css */
+#custom-notification-modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    z-index: 200; /* Asegura que esté por encima de otros modales */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+#custom-notification-modal .notification-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    position: relative;
+}
+
+#custom-notification-modal .notification-content .close-notification-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#custom-notification-modal .notification-content .close-notification-btn:hover {
+    color: black;
+}
+
+#custom-notification-modal .notification-content h3 {
+    margin-top: 0;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#custom-notification-modal .notification-content h3 i {
+    margin-right: 10px;
+    font-size: 2rem;
+}
+
+#custom-notification-modal .notification-content p {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+/* Clases para tipos de notificación - Centralizado en styles.css */
+.notification-success { color: #28a745; } /* Verde */
+.notification-error { color: #dc3545; }   /* Rojo */
+.notification-info { color: #007bff; }    /* Azul */
+
+/* Estilo para precio anterior y actual de oferta - Centralizado en styles.css */
+.price.old-price {
+    text-decoration: line-through;
+    color: #888;
+    font-size: 0.9em;
+}
+.price.current-price {
+    color: #dc3545; /* Rojo de oferta */
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-top: 5px;
+}
+
+/* offer-tag - Centralizado en styles.css */
+.offer-tag {
+    background-color: #dc3545; /* Rojo para ofertas */
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+
+/* Media Queries para Responsividad (Opcional, pero muy recomendado) */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .nav-links li {
+        margin: 10px 0;
+    }
+
+    .nav-icons {
+        margin-top: 15px;
+    }
+
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-slider {
+        height: 250px;
+    }
+}
+/*PESTAÑA HOMBRE (estilos para category-hero y products-category, aplicable a Mujer y Ofertas también)*/
+.category-hero {
+    background-color: #e2e6ea;
+    color: #333;
+    text-align: center;
+    padding: 60px 20px;
+    margin-bottom: 40px;
+    border-bottom: 2px solid #ddd;
+}
+
+.category-hero h1 {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: #007bff;
+}
+
+.category-hero p {
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.products-category {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.products-category h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+/* CONTACTOS.HTML */
+/* Estilos para la sección de formulario de contacto */
+.contact-form-section {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.contact-form-section h2 {
+    font-size: 2.2rem;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.contact-form .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.contact-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form textarea {
+    width: calc(100% - 20px);
+    padding: 12px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.contact-form textarea {
+    resize: vertical;
+}
+
+.contact-form .submit-btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.contact-form .submit-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos para la sección de información de contacto */
+.contact-info-section {
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 30px;
+    text-align: center;
+}
+
+.contact-info-section h2 {
+    font-size: 2.2rem;
+    color: #333;
+    margin-bottom: 40px;
+}
+
+.contact-info-section .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    justify-content: center;
+}
+
+.contact-info-section .info-item {
+    background-color: #f8f9fa;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.contact-info-section .info-item h3 {
+    font-size: 1.5rem;
+    color: #007bff;
+    margin-bottom: 15px;
+}
+
+.contact-info-section .info-item p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #666;
+}
+
+/* CARRITO.HTML*/
+
+
+/* Estilos para el contador de items en el carrito */
+.cart-count {
+    background-color: #dc3545; /* Rojo llamativo */
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.8em;
+    position: relative;
+    top: -8px; /* Ajusta la posición vertical */
+    left: -5px; /* Ajusta la posición horizontal */
+    vertical-align: super;
+    min-width: 15px; /* Asegura que el círculo sea visible incluso con 1 dígito */
+    text-align: center;
+    display: inline-block;
+}
+
+/* Estilos para la sección del carrito de compras */
+.cart-items-section {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#cart-items-container {
+    margin-bottom: 30px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+    margin-bottom: 15px;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.cart-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    margin-right: 20px;
+    border-radius: 5px;
+}
+
+.cart-item-details {
+    flex-grow: 1;
+}
+
+.cart-item-details h4 {
+    margin: 0 0 5px 0;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.cart-item-details p {
+    margin: 0;
+    color: #666;
+}
+
+.cart-item-quantity {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.cart-item-quantity input {
+    width: 50px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    margin: 0 5px;
+}
+
+.cart-item-quantity button {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1em;
+    transition: background-color 0.2s ease;
+}
+
+.cart-item-quantity button:hover {
+    background-color: #e0e0e0;
+}
+
+.cart-item-price {
+    font-weight: bold;
+    color: #007bff;
+    font-size: 1.1em;
+    margin-left: 20px;
+    min-width: 100px;
+    text-align: right;
+}
+
+.remove-item-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 20px;
+    transition: background-color 0.2s ease;
+}
+
+.remove-item-btn:hover {
+    background-color: #c82333;
+}
+
+.cart-summary {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    text-align: right;
+}
+
+.cart-summary h3 {
+    margin-top: 0;
+    font-size: 1.5em;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.cart-summary p {
+    margin: 10px 0;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.cart-summary .cart-total {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #007bff;
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.cart-summary .checkout-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 25px;
+}
+
+.cart-summary .checkout-btn:hover {
+    background-color: #218838;
+}

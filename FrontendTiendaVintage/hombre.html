@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hombre - Tienda Vintage</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilos para el Modal de Notificación Personalizado (Consistentes en todos los HTML) */
+        .modal {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            z-index: 1000; /* Asegura que esté por encima de otros elementos */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Podría ser más responsivo */
+            max-width: 500px;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+        }
+        .notification-content { /* Usado por el modal de notificación */
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+        }
+        .notification-success { color: #28a745; }
+        .notification-error { color: #dc3545; }
+        .notification-info { color: #007bff; }
+        .notification-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        .notification-title i {
+            font-size: 2rem;
+        }
+        /* Estilo para precio anterior y actual de oferta */
+        .price.old-price {
+            text-decoration: line-through;
+            color: #888;
+            font-size: 0.9em;
+        }
+        .price.current-price {
+            color: #dc3545; /* Rojo de oferta */
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-top: 5px;
+        }
+        /* Centrado para product-card */
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .product-card img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .offer-tag {
+            background-color: #dc3545; /* Rojo para ofertas */
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="index.html">Vintage Cloathing</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="hombre.html">Hombre</a></li>
+                <li><a href="mujer.html">Mujer</a></li>
+                <li><a href="ofertas.html">Ofertas</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="#" id="login-btn">Login</a>
+                
+                <div id="user-profile-section" style="display: none; align-items: center; gap: 0.5rem; margin-left: 1rem;">
+                    <span id="user-name-display" style="color: white; font-size: 0.9rem; font-weight: 500;"></span>
+                    <button id="logout-btn" style="background-color: #e74c3c; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.8rem; cursor: pointer;">Cerrar Sesión</button>
+                    <a href="admin.html" id="admin-link" style="background-color: #27ae60; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.8rem; cursor: pointer; display: none;">Panel Admin</a>
+                </div>
+
+                <a href="carrito.html" style="margin-left: 1rem;">🛒 <span id="cart-item-count" class="cart-count">0</span></a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="category-hero">
+            <h1>Colección Hombre</h1>
+            <p>Explora nuestra selección exclusiva de ropa vintage para hombre.</p>
+        </section>
+
+        <section class="products-category">
+            <h2>Productos para Hombre</h2>
+            <div id="api-product-grid" class="product-grid">
+                <p>Cargando productos...</p>
+            </div>
+        </section>
+
+        <div id="login-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <div class="modal-header">
+                    <h2 class="text-2xl font-bold text-gray-800">Iniciar Sesión</h2>
+                </div>
+                <form id="login-form" class="space-y-4">
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700">Usuario:</label>
+                        <input type="text" id="username" name="username" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Contraseña:</label>
+                        <input type="password" id="password" name="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+                    <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                        Iniciar Sesión
+                    </button>
+                    <p class="text-center text-sm mt-4">
+                        ¿No tienes una cuenta? <a href="#" id="show-register" class="font-medium text-indigo-600 hover:text-indigo-500">Regístrate aquí</a>
+                    </p>
+                </form>
+
+                <form id="register-form" class="space-y-4" style="display: none;">
+                    <div>
+                        <label for="reg-username" class="block text-sm font-medium text-gray-700">Usuario:</label>
+                        <input type="text" id="reg-username" name="reg-username" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+                    <div>
+                        <label for="reg-email" class="block text-sm font-medium text-gray-700">Email:</label>
+                        <input type="email" id="reg-email" name="reg-email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+                    <div>
+                        <label for="reg-password" class="block text-sm font-medium text-gray-700">Contraseña:</label>
+                        <input type="password" id="reg-password" name="reg-password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+                    <div>
+                        <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirmar Contraseña:</label>
+                        <input type="password" id="confirm-password" name="confirm-password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+                    <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700">
+                        Registrarse
+                    </button>
+                    <p class="text-center text-sm mt-4">
+                        ¿Ya tienes una cuenta? <a href="#" id="show-login" class="font-medium text-indigo-600 hover:text-indigo-500">Inicia sesión aquí</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+
+        <div id="custom-notification-modal" class="modal">
+            <div class="notification-content">
+                <span class="close-notification-btn">&times;</span>
+                <h3 id="notification-title"></h3>
+                <p id="notification-message"></p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Tu Marca de Ropa. Todos los derechos reservados.</p>
+        <div class="social-links">
+            <a href="#">Facebook</a>
+            <a href="#">Instagram</a>
+            <a href="#">Twitter</a>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+
+</body>
+</html>

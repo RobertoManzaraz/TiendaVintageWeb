@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Gestión de Tienda</title>
+    <!-- Tu archivo de estilos CSS centralizado -->
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Iconos de Bootstrap para notificaciones y quizás otros elementos de la interfaz de administración -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Tailwind CSS para utilidades rápidas (si lo usas para estilos generales, es bueno mantenerlo) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilos específicos para la navegación de pestañas en admin.html */
+        .admin-section {
+            display: none;
+        }
+        .admin-section.active-section {
+            display: block;
+        }
+        #show-products-btn.active, #show-categories-btn.active {
+            background-color: #2563eb; /* Color de Tailwind blue-600 */
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #show-products-btn:not(.active), #show-categories-btn:not(.active) {
+            background-color: #d1d5db; /* Color de Tailwind gray-300 */
+            color: #4b5563; /* Color de Tailwind gray-700 */
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="index.html">Vintage Cloathing</a>
+            </div>
+            <ul class="nav-links">
+                <!-- No incluimos enlaces a admin.html aquí, es intencional -->
+                <li><a href="hombre.html">Hombre</a></li>
+                <li><a href="mujer.html">Mujer</a></li>
+                <li><a href="ofertas.html">Ofertas</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="#" id="login-btn">Login</a>
+                <a href="carrito.html">🛒 <span id="cart-item-count" class="cart-count">0</span></a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 lg:p-8">
+        <h1 class="text-4xl font-bold text-gray-800 text-center mb-8">Panel de Administración</h1>
+
+        <!-- Pestañas de Navegación del Admin -->
+        <div class="flex justify-center mb-6">
+            <button id="show-products-btn" class="px-6 py-3 rounded-t-lg font-semibold transition-colors duration-300 bg-blue-600 text-white active">
+                Gestión de Productos
+            </button>
+            <button id="show-categories-btn" class="px-6 py-3 rounded-t-lg font-semibold transition-colors duration-300 bg-gray-300 text-gray-700 hover:bg-gray-400">
+                Gestión de Categorías
+            </button>
+        </div>
+
+        <!-- Contenedor para la Gestión de Productos -->
+        <div id="product-management-section" class="admin-section active-section">
+            <!-- Formulario para Añadir/Editar Productos -->
+            <section class="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h2 id="product-form-title" class="text-2xl font-semibold text-gray-700 mb-4">Añadir Nuevo Producto</h2>
+                <form id="product-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="hidden" id="product-id">
+
+                    <div>
+                        <label for="product-name" class="block text-sm font-medium text-gray-700">Nombre del Producto:</label>
+                        <input type="text" id="product-name" name="name" required
+                               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+                    </div>
+
+                    <div>
+                        <label for="product-description" class="block text-sm font-medium text-gray-700">Descripción:</label>
+                        <textarea id="product-description" name="description" rows="3" required
+                                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"></textarea>
+                    </div>
+
+                    <div>
+                        <label for="product-price" class="block text-sm font-medium text-gray-700">Precio:</label>
+                        <input type="number" id="product-price" name="price" step="0.01" min="0" required
+                               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+                    </div>
+
+                    <div>
+                        <label for="product-stock" class="block text-sm font-medium text-gray-700">Stock:</label>
+                        <input type="number" id="product-stock" name="stock" min="0" required
+                               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+                    </div>
+
+                    <div>
+                        <label for="product-image-url" class="block text-sm font-medium text-gray-700">URL de Imagen:</label>
+                        <input type="url" id="product-image-url" name="imageUrl" required
+                               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                               placeholder="Ej: https://ejemplo.com/imagen.jpg">
+                    </div>
+
+                    <div>
+                        <label for="product-category" class="block text-sm font-medium text-gray-700">Categoría:</label>
+                        <select id="product-category" name="categoryId" required
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-white">
+                            <!-- Las categorías se cargarán aquí dinámicamente -->
+                            <option value="">Cargando categorías...</option>
+                        </select>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" id="product-is-offer" name="estaEnOferta"
+                                   class="form-checkbox h-5 w-5 text-blue-600 rounded">
+                            <span class="ml-2 text-gray-700">¿Está en Oferta?</span>
+                        </label>
+                    </div>
+
+                    <div class="md:col-span-2 flex justify-end space-x-4">
+                        <button type="submit" id="submit-product-btn"
+                                class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 transition-colors duration-300">
+                            Añadir Producto
+                        </button>
+                        <button type="button" id="cancel-product-edit-btn" style="display: none;"
+                                class="px-6 py-2 bg-gray-400 text-white font-semibold rounded-md shadow-md hover:bg-gray-500 transition-colors duration-300">
+                            Cancelar Edición
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Tabla de Productos Existentes -->
+            <section class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4">Productos Existentes</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Imagen</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Oferta</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoría</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product-list" class="bg-white divide-y divide-gray-200">
+                            <!-- Los productos se cargarán aquí -->
+                            <tr><td colspan="9" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">Cargando productos...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- Contenedor para la Gestión de Categorías (Inicialmente oculto) -->
+        <div id="category-management-section" class="admin-section hidden-section">
+            <!-- Formulario para Añadir/Editar Categorías -->
+            <section class="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h2 id="category-form-title" class="text-2xl font-semibold text-gray-700 mb-4">Añadir Nueva Categoría</h2>
+                <form id="category-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="hidden" id="category-id">
+
+                    <div>
+                        <label for="category-name" class="block text-sm font-medium text-gray-700">Nombre de la Categoría:</label>
+                        <input type="text" id="category-name" name="nombre" required
+                               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+                    </div>
+
+                    <div>
+                        <label for="category-parent" class="block text-sm font-medium text-gray-700">Categoría Padre (opcional):</label>
+                        <select id="category-parent" name="parentCategoryId"
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-white">
+                            <option value="">Ninguna (Categoría Principal)</option>
+                            <!-- Las categorías existentes se cargarán aquí para ser padres -->
+                        </select>
+                    </div>
+
+                    <div class="md:col-span-2 flex justify-end space-x-4">
+                        <button type="submit" id="submit-category-btn"
+                                class="px-6 py-2 bg-green-600 text-white font-semibold rounded-md shadow-md hover:bg-green-700 transition-colors duration-300">
+                            Añadir Categoría
+                        </button>
+                        <button type="button" id="cancel-category-edit-btn" style="display: none;"
+                                class="px-6 py-2 bg-gray-400 text-white font-semibold rounded-md shadow-md hover:bg-gray-500 transition-colors duration-300">
+                            Cancelar Edición
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Tabla de Categorías Existentes -->
+            <section class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4">Categorías Existentes</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoría Padre</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="category-list" class="bg-white divide-y divide-gray-200">
+                            <!-- Las categorías se cargarán aquí -->
+                            <tr><td colspan="4" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">Cargando categorías...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- Modal de Login/Registro (Manejado por script.js y styles.css) -->
+        <div id="login-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2>Iniciar Sesión</h2>
+                <form id="login-form">
+                    <label for="username">Usuario:</label>
+                    <input type="text" id="username" name="username" required>
+                    <label for="password">Contraseña:</label>
+                    <input type="password" id="password" name="password" required>
+                    <button type="submit">Entrar</button>
+                    <p>¿No tienes cuenta? <a href="#" id="show-register">Regístrate aquí</a></p>
+                </form>
+                <form id="register-form" style="display: none;">
+                    <h2>Registrarse</h2>
+                    <label for="reg-username">Usuario:</label>
+                    <input type="text" id="reg-username" name="reg-username" required>
+                    <label for="reg-email">Email:</label>
+                    <input type="email" id="reg-email" name="reg-email" required>
+                    <label for="reg-password">Contraseña:</label>
+                    <input type="password" id="reg-password" name="reg-password" required>
+                    <label for="confirm-password">Confirmar Contraseña:</label>
+                    <input type="password" id="confirm-password" name="confirm-password" required>
+                    <button type="submit">Registrarse</button>
+                    <p>¿Ya tienes cuenta? <a href="#" id="show-login">Inicia sesión aquí</a></p>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal de Notificación Personalizado (Manejado por script.js y styles.css) -->
+        <div id="custom-notification-modal" class="modal">
+            <div class="notification-content">
+                <span class="close-notification-btn">&times;</span>
+                <h3 id="notification-title"></h3>
+                <p id="notification-message"></p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Vintage Cloathing. Todos los derechos reservados.</p>
+        <div class="social-links">
+            <a href="#">Facebook</a>
+            <a href="#">Instagram</a>
+            <a href="#">Twitter</a>
+        </div>
+    </footer>
+
+    <!-- Tu script.js centralizado, que ahora manejará la lógica de esta página -->
+    <script src="js/script.js"></script>
+</body>
+</html>
