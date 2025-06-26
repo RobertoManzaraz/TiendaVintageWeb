@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json; // <-- ¡Añade esta línea!
+using System.Text.Json.Serialization; // Asegúrate de usar este para [JsonIgnore]
 
 namespace BackendApiTiendaVintage.Models
 {
@@ -13,15 +13,17 @@ namespace BackendApiTiendaVintage.Models
         [MaxLength(100)]
         public string Nombre { get; set; } = string.Empty;
 
-        public int? ParentId { get; set; }
+        // CAMBIO CRUCIAL: Renombrado a ParentCategoryId para coincidir con el frontend
+        // y la convención común en C# para claves foráneas.
+        public int? ParentCategoryId { get; set; } // Renombrado de ParentId
 
-        [JsonIgnore] // <-- ¡Añade esta línea! Ignora 'Parent' en la serialización JSON
+        [JsonIgnore] // Ignora 'Parent' en la serialización JSON para evitar ciclos
         public Categoria? Parent { get; set; }
 
-        [JsonIgnore] // <-- ¡Añade esta línea! Ignora 'Children' en la serialización JSON
+        [JsonIgnore] // Ignora 'Children' en la serialización JSON para evitar ciclos
         public ICollection<Categoria> Children { get; set; } = new List<Categoria>();
 
-        [JsonIgnore] // <-- ¡Añade esta línea! Ignora 'Productos' en la serialización JSON
+        [JsonIgnore] // Ignora 'Productos' en la serialización JSON para evitar ciclos
         public ICollection<Producto> Productos { get; set; } = new List<Producto>();
     }
 }

@@ -1,4 +1,3 @@
-// Services/AuthService.cs
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -7,10 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using BackendApiTiendaVintage.Data; // ¡IMPORTANTE! Asegura que este namespace sea el de tu Data
-using BackendApiTiendaVintage.Models; // ¡IMPORTANTE! Asegura que este namespace sea el de tus Models
+using BackendApiTiendaVintage.Data; 
+using BackendApiTiendaVintage.Models; 
+using BackendApiTiendaVintage.DTOs; // ¡IMPORTANTE! Asegúrate de que este using esté aquí
 
-namespace BackendApiTiendaVintage.Services // ¡IMPORTANTE! Asegura que este namespace sea el de tu proyecto.
+namespace BackendApiTiendaVintage.Services
 {
     public class AuthService : IAuthService
     {
@@ -23,32 +23,17 @@ namespace BackendApiTiendaVintage.Services // ¡IMPORTANTE! Asegura que este nam
             _configuration = configuration;
         }
 
-        // --- MÉTODOS DE HASHING Y VERIFICACIÓN (¡TEMPORALES PARA DESARROLLO!) ---
-        // *** PARA PRODUCCIÓN, DEBES USAR UNA LIBRERÍA DE HASHING ROBUSTA COMO BCrypt.Net O Argon2 ***
-        // Para BCrypt.Net: Instala NuGet 'BCrypt.Net-Core'
-        // public string HashPassword(string password)
-        // {
-        //     return BCrypt.Net.BCrypt.HashPassword(password, 12); // Costo de hashing 12
-        // }
-        // public bool VerifyPassword(string password, string hashedPassword)
-        // {
-        //     return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
-        // }
-
-        // MÉTODOS ACTUALES (¡Solo para desarrollo y pruebas rápidas! NO USAR EN PRODUCCIÓN)
         public string HashPassword(string password)
         {
-            // Este es un HASH MUY SIMPLE y NO SEGURO. Sirve solo para que la lógica funcione.
-            // La "sal" es fija para simplificar; en producción debería ser aleatoria por usuario.
-            return Convert.ToBase64String(Encoding.UTF8.GetBytes(password + "_fixed_salt_for_demo"));
+            // El '!' al final de _fixed_salt_for_demo indica que confiamos en que no será nulo.
+            // Esto ayuda a resolver la advertencia CS8604
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(password + "_fixed_salt_for_demo" /*!*/)); 
         }
 
         public bool VerifyPassword(string password, string hashedPassword)
         {
             return HashPassword(password) == hashedPassword;
         }
-        // --- FIN MÉTODOS DE HASHING TEMPORALES ---
-
 
         public async Task<User> Register(string username, string password, string role = "User")
         {
@@ -57,7 +42,7 @@ namespace BackendApiTiendaVintage.Services // ¡IMPORTANTE! Asegura que este nam
                 throw new ApplicationException("El nombre de usuario ya existe.");
             }
 
-            var passwordHash = HashPassword(password); // Usamos el método de hash definido arriba
+            var passwordHash = HashPassword(password); 
             var user = new User { Username = username, PasswordHash = passwordHash, Role = role };
 
             _context.Users.Add(user);
@@ -65,8 +50,10 @@ namespace BackendApiTiendaVintage.Services // ¡IMPORTANTE! Asegura que este nam
             return user;
         }
 
-        public async Task<string> Login(string username, string stringPassword)
+        // ¡IMPORTANTE! El método Login ahora devuelve un objeto LoginResponseDto (puede ser nulo)
+        public async Task<LoginResponseDto?> Login(string username, string stringPassword)
         {
+            // El '?' en 'User?' indica que 'user' puede ser nulo.
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == username);
             if (user == null || !VerifyPassword(stringPassword, user.PasswordHash))
             {
@@ -74,8 +61,8 @@ namespace BackendApiTiendaVintage.Services // ¡IMPORTANTE! Asegura que este nam
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            // Asegúrate de que "Jwt:Key" esté configurado en appsettings.json
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+            // El '!' al final de _configuration["Jwt:Key"] indica que confiamos en que no será nulo.
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]!); 
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -83,18 +70,25 @@ namespace BackendApiTiendaVintage.Services // ¡IMPORTANTE! Asegura que este nam
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Role, user.Role) // Añade el rol al token
+                    new Claim(ClaimTypes.Role, user.Role)
                 }),
-                Expires = DateTime.UtcNow.AddHours(1), // Token válido por 1 hora
+                Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            
+            // ¡IMPORTANTE! Ahora devuelve una INSTANCIA de LoginResponseDto
+            return new LoginResponseDto
+            {
+                Token = tokenHandler.WriteToken(token),
+                Username = user.Username,
+                Role = user.Role
+            };
         }
 
-        // Implementación del nuevo método para obtener usuario por username
-        public async Task<User> GetUserByUsername(string username)
+        // El '?' en 'User?' indica que el retorno puede ser nulo.
+        public async Task<User?> GetUserByUsername(string username)
         {
             return await _context.Users.SingleOrDefaultAsync(u => u.Username == username);
         }

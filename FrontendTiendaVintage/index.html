@@ -5,187 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tienda Vintage - Catálogo Dinámico</title>
     <link rel="stylesheet" href="css/styles.css">
+    <!-- Iconos de Bootstrap para login, carrito y notificaciones -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Font Awesome (ya lo tenías, pero con Bootstrap Icons ya no es estrictamente necesario para los iconos principales) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Estilos adicionales que pueden estar en tu styles.css, pero aquí como ejemplo */
-        .modal {
-            display: none; /* Oculto por defecto */
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
-        .close-btn {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            cursor: pointer;
-        }
-        .notification-content { /* Usado por el modal de notificación */
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            position: relative;
-        }
-        .notification-success { color: #28a745; }
-        .notification-error { color: #dc3545; }
-        .notification-info { color: #007bff; }
-        .notification-title {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            font-size: 1.8rem; /* Ajuste para un título más visible */
-            margin-bottom: 15px;
-        }
-        .notification-title i {
-            font-size: 2rem; /* Icono un poco más grande */
-        }
-        /* Estilos para el slider (si no están en styles.css) */
-        .hero-slider {
-            position: relative;
-            width: 100%;
-            max-height: 500px; /* Ajusta la altura máxima si es necesario */
-            overflow: hidden;
-        }
-        .slider-container {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-            height: 100%;
-        }
-        .slider-image {
-            min-width: 100%; /* Cada imagen toma el 100% del ancho del contenedor */
-            height: 100%;
-            object-fit: cover; /* Asegura que la imagen cubra el espacio sin distorsionarse */
-            display: block;
-        }
-        .slider-image-container { /* Un contenedor para la imagen si quieres añadir superposiciones */
-            position: relative;
-            min-width: 100%;
-        }
-        .slider-button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 15px;
-            cursor: pointer;
-            z-index: 10;
-            border-radius: 50%; /* Botones circulares */
-        }
-        .prev-btn { left: 10px; }
-        .next-btn { right: 10px; }
-        /* Estilos para cards de productos (si no están en styles.css) */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-        .product-card {
-            background-color: #fff;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 1.5rem;
-            text-align: center;
-        }
-        .product-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        .product-card h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 0.5rem;
-        }
-        .product-card .description {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 1rem;
-            flex-grow: 1; /* Permite que la descripción ocupe el espacio disponible */
-        }
-        .product-card .price {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-top: 0.5rem;
-        }
-        .product-card .old-price {
-            text-decoration: line-through;
-            color: #888;
-            font-size: 0.9em;
-            margin-right: 0.5rem;
-        }
-        .product-card .current-price {
-            color: #e74c3c;
-        }
-        .product-card .offer-tag {
-            background-color: #e74c3c;
-            color: white;
-            font-weight: bold;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.75rem;
-            margin-top: 0.5rem;
-        }
-        .product-card .stock {
-            font-size: 0.875rem;
-            color: #7f8c8d;
-            margin-top: 0.25rem;
-            margin-bottom: 1rem;
-        }
-        .product-card .add-to-cart-btn {
-            background-color: #3498db;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            transition: background-color 0.3s ease;
-            width: 100%;
-            font-weight: 500;
-            cursor: pointer;
-        }
-        .product-card .add-to-cart-btn:hover {
-            background-color: #2980b9;
-        }
-    </style>
 </head>
 <body>
 
@@ -201,15 +25,23 @@
                 <li><a href="contacto.html">Contacto</a></li>
             </ul>
             <div class="nav-icons">
-                <a href="#" id="login-btn">Login</a>
+                <!-- Este enlace será visible SOLO si el usuario NO está logueado -->
+                <a href="#" id="login-btn"><i class="bi bi-person-circle"></i></a>
                 
-                <div id="user-profile-section" style="display: none; align-items: center; gap: 0.5rem; margin-left: 1rem;">
-                    <span id="user-name-display" style="color: white; font-size: 0.9rem; font-weight: 500;"></span>
-                    <button id="logout-btn" style="background-color: #e74c3c; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.8rem; cursor: pointer;">Cerrar Sesión</button>
-                    <a href="admin.html" id="admin-link" style="background-color: #27ae60; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.8rem; cursor: pointer; display: none;">Panel Admin</a>
+                <!-- Esta sección se mostrará solo cuando el usuario esté logueado -->
+                <!-- Sus estilos iniciales (display:none) son manejados por styles.css -->
+                <div id="user-profile-section"> 
+                    <span id="user-name-display"></span>
+                    <button id="logout-btn" class="btn">Cerrar Sesión</button>
+                    <!-- Este enlace solo se mostrará si el usuario es Admin. Su display inicial es none en styles.css. -->
+                    <a href="admin.html" id="admin-link" class="btn">Panel Admin</a>
                 </div>
 
-                <a href="carrito.html" style="margin-left: 1rem;">🛒 <span id="cart-item-count" class="cart-count">0</span></a>
+                <!-- Icono de Carrito (ahora usa Bootstrap Icons para combinar con el de persona) -->
+                <a href="carrito.html" class="cart-icon">
+                    <i class="bi bi-cart"></i> 
+                    <span id="cart-item-count" class="cart-count">0</span>
+                </a>
             </div>
         </nav>
     </header>
@@ -232,11 +64,14 @@
             </div>
         </section>
 
+        <!-- Modal de Login/Registro (Manejado por script.js y styles.css) -->
+        <!-- Se quitó style="display: none;" ya que styles.css ya lo maneja para .modal -->
         <div id="login-modal" class="modal">
             <div class="modal-content">
                 <span class="close-btn">&times;</span>
                 <div class="modal-header">
-                    <h2 class="text-2xl font-bold text-gray-800">Iniciar Sesión</h2>
+                    <!-- id="modal-title" es manejado por JS para cambiar el texto -->
+                    <h2 id="modal-title" class="text-2xl font-bold text-gray-800">Iniciar Sesión</h2>
                 </div>
                 <form id="login-form" class="space-y-4">
                     <div>
@@ -256,14 +91,17 @@
                 </form>
 
                 <form id="register-form" class="space-y-4" style="display: none;">
+                    <!-- Se quitó el h2 duplicado ya que #modal-title lo maneja -->
                     <div>
                         <label for="reg-username" class="block text-sm font-medium text-gray-700">Usuario:</label>
                         <input type="text" id="reg-username" name="reg-username" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                     </div>
-                    <div>
+                    <!-- El campo de email no está en tu modelo de registro de backend, considera si lo necesitas -->
+                    <!-- Si lo necesitas en tu API, agrégalo al modelo de DTO de registro en ASP.NET Core -->
+                    <!-- <div>
                         <label for="reg-email" class="block text-sm font-medium text-gray-700">Email:</label>
                         <input type="email" id="reg-email" name="reg-email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
-                    </div>
+                    </div> -->
                     <div>
                         <label for="reg-password" class="block text-sm font-medium text-gray-700">Contraseña:</label>
                         <input type="password" id="reg-password" name="reg-password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
@@ -282,6 +120,7 @@
             </div>
         </div>
 
+        <!-- Modal de Notificación Personalizado (Manejado por script.js y styles.css) -->
         <div id="custom-notification-modal" class="modal">
             <div class="notification-content">
                 <span class="close-notification-btn">&times;</span>
@@ -293,7 +132,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2025 Tu Marca de Ropa. Todos los derechos reservados.</p>
+        <p>&copy; 2025 Vintage Cloathing. Todos los derechos reservados.</p>
         <div class="social-links">
             <a href="#">Facebook</a>
             <a href="#">Instagram</a>
@@ -301,6 +140,7 @@
         </div>
     </footer>
 
+    <!-- Tu script.js centralizado, que ahora manejará la lógica de esta página -->
     <script src="js/script.js"></script>
 
 </body>

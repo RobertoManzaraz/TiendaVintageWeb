@@ -10,25 +10,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Tailwind CSS para utilidades rápidas (si lo usas para estilos generales, es bueno mantenerlo) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Estilos específicos para la navegación de pestañas en admin.html */
-        .admin-section {
-            display: none;
-        }
-        .admin-section.active-section {
-            display: block;
-        }
-        #show-products-btn.active, #show-categories-btn.active {
-            background-color: #2563eb; /* Color de Tailwind blue-600 */
-            color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        #show-products-btn:not(.active), #show-categories-btn:not(.active) {
-            background-color: #d1d5db; /* Color de Tailwind gray-300 */
-            color: #4b5563; /* Color de Tailwind gray-700 */
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body class="bg-gray-100">
 
@@ -38,15 +19,28 @@
                 <a href="index.html">Vintage Cloathing</a>
             </div>
             <ul class="nav-links">
-                <!-- No incluimos enlaces a admin.html aquí, es intencional -->
                 <li><a href="hombre.html">Hombre</a></li>
                 <li><a href="mujer.html">Mujer</a></li>
                 <li><a href="ofertas.html">Ofertas</a></li>
                 <li><a href="contacto.html">Contacto</a></li>
             </ul>
             <div class="nav-icons">
-                <a href="#" id="login-btn">Login</a>
-                <a href="carrito.html">🛒 <span id="cart-item-count" class="cart-count">0</span></a>
+                <!-- Este enlace será visible SOLO si el usuario NO está logueado -->
+                <a href="#" id="login-btn"><i class="bi bi-person-circle"></i></a>
+                
+                <!-- ESTA SECCIÓN ES LA CLAVE: Aquí es donde aparecerá el saludo y los botones de Admin y Cerrar Sesión -->
+                <!-- Por defecto, display:none es manejado por css/styles.css, y JS lo cambiará a flex -->
+                <div id="user-profile-section"> 
+                    <span id="user-name-display" class="text-white text-sm font-semibold mr-2"></span>
+                    <!-- Este enlace solo se mostrará si el usuario es Admin. Su display inicial es none en CSS. -->
+                    <a href="admin.html" id="admin-link" class="py-1 px-3 rounded-md mr-2">Panel Admin</a>
+                    <button id="logout-btn" class="py-1 px-3 rounded-md">Cerrar Sesión</button>
+                </div>
+                <!-- Icono de Carrito (siempre visible, su contador es manejado por JS) -->
+                <a href="carrito.html" class="cart-icon">
+                    <i class="bi bi-cart"></i>
+                    <span id="cart-item-count" class="cart-count">0</span>
+                </a>
             </div>
         </nav>
     </header>
@@ -81,7 +75,7 @@
                     <div>
                         <label for="product-description" class="block text-sm font-medium text-gray-700">Descripción:</label>
                         <textarea id="product-description" name="description" rows="3" required
-                                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"></textarea>
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"></textarea>
                     </div>
 
                     <div>
@@ -106,7 +100,7 @@
                     <div>
                         <label for="product-category" class="block text-sm font-medium text-gray-700">Categoría:</label>
                         <select id="product-category" name="categoryId" required
-                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-white">
+                                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-white">
                             <!-- Las categorías se cargarán aquí dinámicamente -->
                             <option value="">Cargando categorías...</option>
                         </select>
@@ -122,11 +116,11 @@
 
                     <div class="md:col-span-2 flex justify-end space-x-4">
                         <button type="submit" id="submit-product-btn"
-                                class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 transition-colors duration-300">
+                                 class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 transition-colors duration-300">
                             Añadir Producto
                         </button>
                         <button type="button" id="cancel-product-edit-btn" style="display: none;"
-                                class="px-6 py-2 bg-gray-400 text-white font-semibold rounded-md shadow-md hover:bg-gray-500 transition-colors duration-300">
+                                 class="px-6 py-2 bg-gray-400 text-white font-semibold rounded-md shadow-md hover:bg-gray-500 transition-colors duration-300">
                             Cancelar Edición
                         </button>
                     </div>
@@ -161,7 +155,8 @@
         </div>
 
         <!-- Contenedor para la Gestión de Categorías (Inicialmente oculto) -->
-        <div id="category-management-section" class="admin-section hidden-section">
+        <!-- Se cambió la clase de "hidden-section" a "admin-section" y se deja el control a JS/CSS -->
+        <div id="category-management-section" class="admin-section">
             <!-- Formulario para Añadir/Editar Categorías -->
             <section class="bg-white p-6 rounded-lg shadow-md mb-8">
                 <h2 id="category-form-title" class="text-2xl font-semibold text-gray-700 mb-4">Añadir Nueva Categoría</h2>
@@ -177,7 +172,7 @@
                     <div>
                         <label for="category-parent" class="block text-sm font-medium text-gray-700">Categoría Padre (opcional):</label>
                         <select id="category-parent" name="parentCategoryId"
-                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-white">
+                                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-white">
                             <option value="">Ninguna (Categoría Principal)</option>
                             <!-- Las categorías existentes se cargarán aquí para ser padres -->
                         </select>
@@ -185,11 +180,11 @@
 
                     <div class="md:col-span-2 flex justify-end space-x-4">
                         <button type="submit" id="submit-category-btn"
-                                class="px-6 py-2 bg-green-600 text-white font-semibold rounded-md shadow-md hover:bg-green-700 transition-colors duration-300">
+                                 class="px-6 py-2 bg-green-600 text-white font-semibold rounded-md shadow-md hover:bg-green-700 transition-colors duration-300">
                             Añadir Categoría
                         </button>
                         <button type="button" id="cancel-category-edit-btn" style="display: none;"
-                                class="px-6 py-2 bg-gray-400 text-white font-semibold rounded-md shadow-md hover:bg-gray-500 transition-colors duration-300">
+                                 class="px-6 py-2 bg-gray-400 text-white font-semibold rounded-md shadow-md hover:bg-gray-500 transition-colors duration-300">
                             Cancelar Edición
                         </button>
                     </div>
@@ -220,10 +215,10 @@
 
 
         <!-- Modal de Login/Registro (Manejado por script.js y styles.css) -->
-        <div id="login-modal" class="modal" style="display: none;">
+        <div id="login-modal" class="modal">
             <div class="modal-content">
                 <span class="close-btn">&times;</span>
-                <h2>Iniciar Sesión</h2>
+                <h2 id="modal-title">Iniciar Sesión</h2>
                 <form id="login-form">
                     <label for="username">Usuario:</label>
                     <input type="text" id="username" name="username" required>

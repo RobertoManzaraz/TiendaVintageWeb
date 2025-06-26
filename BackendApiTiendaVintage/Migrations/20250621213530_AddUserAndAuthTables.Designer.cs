@@ -3,6 +3,7 @@ using System;
 using BackendApiTiendaVintage.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendApiTiendaVintage.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250621213530_AddUserAndAuthTables")]
+    partial class AddUserAndAuthTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,9 +37,6 @@ namespace BackendApiTiendaVintage.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
-
-                    b.Property<int?>("ParentCategoryId")
-                        .HasColumnType("integer");
 
                     b.Property<int?>("ParentId")
                         .HasColumnType("integer");
@@ -120,7 +120,7 @@ namespace BackendApiTiendaVintage.Migrations
                         new
                         {
                             Id = 1,
-                            PasswordHash = "NDAyMzc4NTJfZml4ZWRfc2FsdF9mb3JfZGVtbw==",
+                            PasswordHash = "adminpasshash_placeholder",
                             Role = "Admin",
                             Username = "admin"
                         });

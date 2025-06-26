@@ -1,22 +1,20 @@
-// Services/IAuthService.cs
-using BackendApiTiendaVintage.Models; // Asegúrate de que este namespace sea correcto
+using BackendApiTiendaVintage.Models; 
+using BackendApiTiendaVintage.DTOs; // ¡IMPORTANTE! Asegúrate de que esta línea esté aquí
 using System.Threading.Tasks;
 
-namespace BackendApiTiendaVintage.Services // ¡IMPORTANTE! Asegura que este namespace sea el de tu proyecto.
+namespace BackendApiTiendaVintage.Services
 {
     public interface IAuthService
     {
-        // Método para registrar un nuevo usuario
-        Task<User> Register(string username, string password, string role = "User");
+        Task<User> Register(string username, string stringPassword, string role = "User");
         
-        // Método para iniciar sesión, devuelve el JWT si es exitoso
-        Task<string> Login(string username, string password);
+        // ¡IMPORTANTE! El método Login ahora devuelve un objeto de tipo LoginResponseDto (puede ser nulo)
+        Task<LoginResponseDto?> Login(string username, string stringPassword); 
 
-        // Métodos para hashear y verificar contraseñas (uso interno del servicio)
         string HashPassword(string password);
         bool VerifyPassword(string password, string hashedPassword);
 
-        // Método para obtener un usuario por su nombre de usuario (necesario para el LoginController)
-        Task<User> GetUserByUsername(string username);
+        // Asegúrate de que este método exista y tenga el '?' para indicar que puede ser nulo
+        Task<User?> GetUserByUsername(string username);
     }
 }

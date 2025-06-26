@@ -39,10 +39,10 @@ namespace BackendApiTiendaVintage.Data
                     // Esto es un PLACEHOLDER.
                     // Una vez que tengas tu AuthService implementado y puedas hashear contraseñas,
                     // DEBES reemplazar "adminpasshash_placeholder" con el HASH real de tu contraseña de admin.
-                    PasswordHash = "adminpasshash_placeholder",
+                    PasswordHash = "NDAyMzc4NTJfZml4ZWRfc2FsdF9mb3JfZGVtbw==",
                     Role = "Admin"
                 }
             );
         }
     }
-}
+}    

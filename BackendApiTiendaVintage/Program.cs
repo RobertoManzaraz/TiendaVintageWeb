@@ -105,4 +105,5 @@ app.UseAuthorization();  // Segundo: Autoriza al usuario basándose en su rol/po
 
 app.MapControllers(); // Mapea las rutas de los controladores de tu API.
 
+
 app.Run(); // Inicia la aplicación.

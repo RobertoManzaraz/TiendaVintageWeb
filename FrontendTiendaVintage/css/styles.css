@@ -52,17 +52,56 @@ header {
     color: #007bff; /* Cambia de color al pasar el ratón */
 }
 
-.nav-icons a {
+.nav-icons {
+    display: flex; /* Convierte el contenedor en un flex container */
+    align-items: center; /* Alinea verticalmente los elementos al centro */
+    gap: 15px; /* Espacio entre los elementos directos del nav-icons */
+}
+
+/* Styles for user profile section in navbar */
+#user-profile-section {
+    display: none; /* OCULTO POR DEFECTO. JS lo mostrará cuando el usuario inicie sesión */
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: 1rem;
+}
+
+#user-profile-section #user-name-display {
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+#user-profile-section #logout-btn {
+    background-color: #e74c3c;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+#user-profile-section #admin-link {
+    background-color: #27ae60;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: none; /* OCULTO POR DEFECTO. JS lo mostrará si el usuario es Admin */
+}
+
+.nav-icons > a { /* Apunta SOLO a los enlaces directos dentro de .nav-icons */
     color: white;
     text-decoration: none;
-    margin-left: 15px; /* Espacio entre iconos */
     font-size: 1.2rem;
     transition: color 0.3s ease;
 }
 
-.nav-icons a:hover {
+.nav-icons > a:hover {
     color: #007bff;
 }
+
 
 /* Hero Slider (Carrusel de imágenes) */
 .hero-slider {
@@ -85,7 +124,7 @@ header {
     width: 100%;
     height: 350px;
     object-fit: cover; /* Recorta la imagen para cubrir el espacio sin distorsionarla */
-    flex-shrink: 0; /* ¡IMPORTANTE! Evita que las imágenes se encojan */
+    flex-shrink: 0; /* ¡IMPORTANT! Evita que las imágenes se encojan */
     display: block;
 }
 
@@ -135,20 +174,27 @@ header {
 .product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
+    gap: 30px; /* Espacio entre las tarjetas */
+    justify-items: center; /* Centra las tarjetas horizontalmente en sus celdas */
 }
 
 .product-card {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    /* Estilos para centrado de product-card, movidos de inline HTML */
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+    flex-direction: column; /* Apila el contenido verticalmente */
+    text-align: left; /* Alinea el texto a la izquierda dentro de la tarjeta */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    /* CLAVE: TAMAÑO FIJO Y CONCRETO PARA LA TARJETA (ajustado para imagen de 500px) */
+    width: 100%; 
+    max-width: 300px; /* Mantener un ancho máximo razonable */
+    height: 610px; /* ALTURA FIJA DE LA TARJETA COMPLETA (500px imagen + espacio para texto/padding) */
+    overflow: hidden; /* Oculta el contenido que se salga de esta altura fija */
+    position: relative; /* Para posicionar elementos internos (imagen, overlay) */
+    box-sizing: border-box; 
+    padding-bottom: 15px; /* Padding solo en la parte inferior para el botón */
 }
 
 .product-card:hover {
@@ -156,43 +202,119 @@ header {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
+.product-card .image-wrapper { /* Nuevo contenedor para la imagen y el overlay */
+    position: relative;
+    width: 100%;
+    height: 500px; /* ALTURA FIJA PARA EL ÁREA DE LA IMAGEN (según tu pedido) */
+    overflow: hidden;
+    border-radius: 8px 8px 0 0; /* Bordes redondeados solo arriba del wrapper */
+}
+
 .product-card img {
-    max-width: 100%;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    height: 250px;
-    object-fit: cover;
-    /* Estilos para imagen en product-card, movidos de inline HTML */
-    height: auto;
-    margin-bottom: 10px;
+    width: 100%; 
+    height: 100%; /* Ocupa el 100% del alto de su wrapper (500px) */
+    object-fit: cover; /* Recorta la imagen para cubrir el espacio sin distorsión */
+    display: block; /* Elimina espacio extra debajo de la imagen */
+    transition: transform 0.3s ease; /* Para efecto de zoom sutil en hover */
 }
 
-.product-card h3 {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 10px;
+.product-card:hover img {
+    transform: scale(1.05); /* Efecto de zoom sutil al pasar el ratón */
 }
 
-.product-card p {
-    font-size: 1.2rem;
-    color: #666;
-    margin-bottom: 20px;
+.product-card .add-to-cart-overlay { /* Overlay para el botón 'Añadir al Carrito' */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0; /* Oculto por defecto */
+    transition: opacity 0.3s ease;
+    z-index: 15; /* Asegura que esté por encima de la imagen, pero debajo del offer-tag */
 }
 
-.product-card button {
-    background-color: #007bff;
+.product-card:hover .add-to-cart-overlay {
+    opacity: 1; /* Visible al pasar el ratón */
+}
+
+.product-card .add-to-cart-overlay button {
+    background-color: #007bff; /* Azul del botón */
     color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 1rem;
+    font-weight: bold;
     transition: background-color 0.3s ease;
+    width: auto; /* Ancho automático para el botón dentro del overlay */
 }
 
-.product-card button:hover {
+.product-card .add-to-cart-overlay button:hover {
     background-color: #0056b3;
 }
+
+.product-card h3 { /* Nombre del Producto */
+    font-size: 1.2rem; /* Tamaño de fuente */
+    font-weight: bold;
+    color: #333;
+    margin: 10px 15px 5px 15px; /* Margen para simular el padding de la imagen de referencia */
+    height: 1.4em; /* Altura para 1 línea de texto aproximadamente (nombre corto) */
+    line-height: 1.4em; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; /* Asegura que el nombre esté en una sola línea */
+}
+
+.product-card p.description { /* Descripción o Talle */
+    font-size: 0.95rem;
+    color: #666;
+    margin: 0 15px 10px 15px; /* Ajustado para el padding */
+    height: 1.5em; /* Altura para 1 línea de texto aproximadamente */
+    line-height: 1.5em; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; /* Asegura que la descripción/talle esté en una sola línea */
+}
+
+.product-card p {
+    margin-bottom: 0; /* Reset para evitar conflictos con otros p */
+}
+
+.product-card .price {
+    font-size: 1.2rem; /* El precio se ve prominente */
+    color: #333; /* Color oscuro como en el ejemplo */
+    margin: 5px 15px 5px 15px; /* Espacio y padding */
+    margin-top: auto; /* Empuja el precio y los elementos siguientes hacia abajo */
+    font-weight: bold; /* Negrita */
+}
+
+/* offer-tag - Mantenido y ajustado para el nuevo layout fijo (posición superior izquierda de la IMAGEN) */
+.offer-tag {
+    background-color: #333; /* Fondo oscuro para que coincida con "New in" de la imagen */
+    color: white;
+    padding: 6px 10px; 
+    border-radius: 4px;
+    font-size: 0.85em; 
+    font-weight: bold;
+    position: absolute; /* Posición absoluta respecto a .image-wrapper */
+    top: 15px; /* Distancia desde la parte superior de la imagen */
+    left: 15px; /* Distancia desde la izquierda de la imagen */
+    z-index: 20; /* Asegura que esté por encima de la imagen y el overlay */
+}
+
+.product-card .stock { /* Se ocultará el stock si no se usa en el HTML */
+    display: none; /* Oculto por defecto si el ejemplo no lo muestra explícitamente */
+}
+
+.product-card button { 
+    display: none; /* Oculta el botón original, el nuevo estará en el overlay */
+}
+
 
 /* Footer (Pie de página) */
 footer {
@@ -214,11 +336,12 @@ footer {
     color: #007bff;
 }
 
-/* Modal (Login/Register) - Centralizado en styles.css */
-#login-modal {
-    display: none;
+/* --- ESTILOS DE MODALES Y NOTIFICACIONES (PREVIAMENTE EN INDEX.HTML) --- */
+/* Modal (Login/Register) */
+.modal {
+    display: none; /* Oculto por defecto. JS lo controla */
     position: fixed;
-    z-index: 100;
+    z-index: 1000; /* Alto z-index para estar por encima de todo */
     left: 0;
     top: 0;
     width: 100%;
@@ -229,23 +352,26 @@ footer {
     align-items: center;
 }
 
-
 .modal-content {
     background-color: #fefefe;
+    margin: auto; /* Para centrar cuando display es block/flex */
     padding: 30px;
     border: 1px solid #888;
     width: 80%;
     max-width: 500px;
-    border-radius: 8px;
+    border-radius: 0.75rem; /* Ajustado de 8px a 0.75rem */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ajustado de 0 5px 15px */
     position: relative;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
 .close-btn {
     color: #aaa;
-    float: right;
+    float: right; /* Flotado para posicionar a la derecha */
     font-size: 28px;
     font-weight: bold;
+    position: absolute; /* Posición absoluta dentro del modal-content */
+    top: 10px;
+    right: 20px;
     cursor: pointer;
 }
 
@@ -256,7 +382,7 @@ footer {
     cursor: pointer;
 }
 
-.modal-content h2 {
+.modal-content h2 { /* Título del modal */
     text-align: center;
     margin-bottom: 20px;
     color: #333;
@@ -282,7 +408,7 @@ footer {
 }
 
 .modal-content form button {
-    background-color: #28a745;
+    background-color: #28a745; /* Color por defecto, puede ser sobrescrito por clases de Tailwind si se usa */
     color: white;
     padding: 12px 20px;
     border: none;
@@ -312,11 +438,11 @@ footer {
     text-decoration: underline;
 }
 
-/* Modales de Notificación Personalizados - Centralizado en styles.css */
+/* Modal de Notificación Personalizado */
 #custom-notification-modal {
-    display: none; /* Oculto por defecto */
+    display: none; /* Oculto por defecto. JS lo controla */
     position: fixed;
-    z-index: 200; /* Asegura que esté por encima de otros modales */
+    z-index: 200; /* Asegura que esté por encima de otros modales, menor que el de login para no interferir */
     left: 0;
     top: 0;
     width: 100%;
@@ -351,18 +477,19 @@ footer {
     color: black;
 }
 
-#custom-notification-modal .notification-content h3 {
+#custom-notification-modal .notification-content h3 { /* Título de la notificación */
     margin-top: 0;
-    font-size: 1.8rem;
+    font-size: 1.8rem; /* Ajuste para un título más visible */
     margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; /* Añadido para alinear icono y texto */
+    align-items: center; /* Añadido para alinear icono y texto */
+    justify-content: center; /* Añadido para centrar icono y texto */
+    gap: 0.5rem; /* Añadido para espacio entre icono y texto */
 }
 
 #custom-notification-modal .notification-content h3 i {
     margin-right: 10px;
-    font-size: 2rem;
+    font-size: 2rem; /* Icono un poco más grande */
 }
 
 #custom-notification-modal .notification-content p {
@@ -370,12 +497,12 @@ footer {
     color: #555;
 }
 
-/* Clases para tipos de notificación - Centralizado en styles.css */
+/* Clases para tipos de notificación */
 .notification-success { color: #28a745; } /* Verde */
-.notification-error { color: #dc3545; }   /* Rojo */
-.notification-info { color: #007bff; }    /* Azul */
+.notification-error { color: #dc3545; }   /* Rojo */
+.notification-info { color: #007bff; }    /* Azul */
 
-/* Estilo para precio anterior y actual de oferta - Centralizado en styles.css */
+/* Estilo para precio anterior y actual de oferta */
 .price.old-price {
     text-decoration: line-through;
     color: #888;
@@ -388,17 +515,17 @@ footer {
     margin-top: 5px;
 }
 
-/* offer-tag - Centralizado en styles.css */
-.offer-tag {
-    background-color: #dc3545; /* Rojo para ofertas */
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.8em;
-    font-weight: bold;
-    display: inline-block;
-    margin-top: 5px;
-}
+/* offer-tag (Ya estaba en styles.css, se mantuvo el que se ajustó para la imagen de 500px) */
+/* .offer-tag { ... } */ 
+
+/* Estilo para stock (si se usara) */
+/* .product-card .stock {
+    font-size: 0.875rem;
+    color: #7f8c8d;
+    margin-top: 0.25rem;
+    margin-bottom: 1rem;
+} */
+/* --- FIN ESTILOS DE MODALES Y NOTIFICACIONES --- */
 
 
 /* Media Queries para Responsividad (Opcional, pero muy recomendado) */
@@ -419,15 +546,32 @@ footer {
     }
 
     .nav-icons {
+        flex-direction: column; /* Apila los iconos verticalmente en móviles */
         margin-top: 15px;
+    }
+    /* Asegura que los elementos dentro de nav-icons también se apilen si es necesario */
+    .nav-icons > a,
+    .nav-icons > div {
+        margin-bottom: 10px; /* Espacio entre elementos apilados */
     }
 
     .product-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
     }
 
     .hero-slider {
         height: 250px;
+    }
+
+    /* Ajustes específicos para product-card en pantallas pequeñas */
+    .product-card {
+        max-width: 90%; /* En móviles, las tarjetas pueden ser más anchas */
+        margin: 0 auto; /* Centrar la tarjeta */
+        height: 580px; /* Ajustamos la altura de la tarjeta en móvil */
+    }
+
+    .product-card .image-wrapper {
+        height: 350px; /* Reducir altura de la imagen en móvil para dejar espacio al texto */
     }
 }
 /*PESTAÑA HOMBRE (estilos para category-hero y products-category, aplicable a Mujer y Ofertas también)*/
@@ -735,4 +879,23 @@ footer {
 
 .cart-summary .checkout-btn:hover {
     background-color: #218838;
+}
+
+/* ADMIN.HTML - Estilos para pestañas del panel de administración */
+/* Estos fueron originalmente en admin.html <style> y ahora están aquí */
+.admin-section {
+    display: none;
+}
+.admin-section.active-section {
+    display: block;
+}
+#show-products-btn.active, #show-categories-btn.active {
+    background-color: #2563eb; /* Color de Tailwind blue-600 */
+    color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+#show-products-btn:not(.active), #show-categories-btn:not(.active) {
+    background-color: #d1d5db; /* Color de Tailwind gray-300 */
+    color: #4b5563; /* Color de Tailwind gray-700 */
+    cursor: pointer;
 }
